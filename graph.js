@@ -2,7 +2,7 @@
 
 
 //duration of the simulation
-var simulation_time = 200;
+var simulation_time = 300;
 //starting price
 var init_price = 1000;
 var plot_ctr = 1;
@@ -206,6 +206,17 @@ var next_interval = 0;
 
     ];
 
+function cumulativePnL(){
+  
+  var averagecost = parseFloat(document.getElementById("averagecost").innerHTML);
+  var currentposition = parseInt(document.getElementById("position").innerHTML);
+  var marketprice = parseFloat(document.getElementById("marketprice").innerHTML);
+  
+  return (averagecost*currentposition - marketprice*currentposition);
+  
+}
+
+
 //TODO, declare a nj var pointing to numjs library
 // var nj = require('numjs');
 function endrealizedPnL(){
@@ -275,25 +286,25 @@ function randomNewsInterval(time_interval_list, price_list, news_end_time, mean,
 }
 
 function generateUniqueRandom(upper_bound){
-   var ret = [];
-   for (var i = 1; i < upper_bound; i++){
-       ret.push(i);
-   }
-   return ret;
+  var ret = [];
+  for (var i = 1; i < upper_bound; i++){
+    ret.push(i);
+  }
+  return ret;
 }
 
 
 function shuffle(array, total_news){
    var i = array.length,
-       j = 0,
-       temp;
+   j = 0,
+   temp;
 
    while (i--){
-       j = Math.floor(Math.random() * (i+1));
-       // swap randomly chosen element with current element
-       temp = array[i];
-       array[i] = array[j];
-       array[j] = temp;
+     j = Math.floor(Math.random() * (i+1));
+     // swap randomly chosen element with current element
+     temp = array[i];
+     array[i] = array[j];
+     array[j] = temp;
    }
    return array.splice(0,total_news);
 }
@@ -312,9 +323,9 @@ function collect_params(interval, total_news) {
     var texts= [];
 
     for(var i=0; i<news_index.length; i++){
-        texts.push(sampleNews[news_index[i]]['question']);
-        mean.push(sampleNews[news_index[i]]['mu']);
-        sigma.push(sampleNews[news_index[i]]['sigma']);
+      texts.push(sampleNews[news_index[i]]['question']);
+      mean.push(sampleNews[news_index[i]]['mu']);
+      sigma.push(sampleNews[news_index[i]]['sigma']);
     }
  
     var return_list = [mean,sigma,texts,news_index];
@@ -350,9 +361,9 @@ function randomPath(days, mu, vol, initPrice) {
     var daily_returns = [];
 
     for (var i=0; i < days; i++) {
-        var standard = 1.0+gaussian(mu/days, vol/Math.sqrt(days));
-        //console.log("random returns: " + i + " " + standard + " mu: " + mu + " vol: " + vol);
-        daily_returns.push(standard);
+      var standard = 1.0+gaussian(mu/days, vol/Math.sqrt(days));
+      //console.log("random returns: " + i + " " + standard + " mu: " + mu + " vol: " + vol);
+      daily_returns.push(standard);
     }
     
     var prices = [initPrice];
@@ -374,7 +385,7 @@ function main(){
     console.log ("initiate trading sequence...");
     
     //check how many news to be generated for the program
-    var number_of_news = generateInterval(8,11);
+    var number_of_news = generateInterval(10,15);
     console.log("number of news expected: " + number_of_news);
     //number_of_noise_news = generateInterval(6, 10);
     var total_news = number_of_news;
@@ -388,11 +399,11 @@ function main(){
     
     while (iterate < number_of_news) {
         
-        // news appearing at a frequency between each 30-45 seconds
-        var iterative_range = generateInterval(30,45);
-        interval.push(generateInterval(interval[interval.length-1],interval[interval.length-1] + iterative_range)) ;  
-        console.log("interval: " + interval[interval.length-1] + " iterate: " +iterative_range);
-        iterate = iterate + 1;
+      // news appearing at a frequency between each 30-45 seconds
+      var iterative_range = generateInterval(40,50);
+      interval.push(generateInterval(interval[interval.length-1],interval[interval.length-1] + iterative_range)) ;  
+      console.log("interval: " + interval[interval.length-1] + " iterate: " +iterative_range);
+      iterate = iterate + 1;
     }
     
     console.log("haha" + interval.length);
@@ -402,7 +413,7 @@ function main(){
     }
     
     console.log("interval: "  + interval[interval.length-1]);
-    var new_total_news = total_news + 2;
+    var new_total_news = total_news + 1;
     
     // collect mean, sigma
     var results_list =  collect_params(interval, new_total_news);
@@ -435,13 +446,12 @@ function main(){
     //start generating entire price paths
     console.log("interval length: " + interval.length);
     for (var i=1; i < interval.length; i++) {
-
-        price_sub_list = randomPath(interval[i]-interval[i-1], mean[i], sigma[i], init_price);
-      
-        for (var j=0; j< price_sub_list.length; j++) 
-          price_list.push(price_sub_list[j]);
-        init_price = price_list[price_list.length-1];
-        console.log("interval: " + interval[i-1] + "-" + interval[i] + "mean: " + mean[i]);
+      price_sub_list = randomPath(interval[i]-interval[i-1], mean[i-1], sigma[i-1], init_price);
+    
+      for (var j=0; j< price_sub_list.length; j++) 
+        price_list.push(price_sub_list[j]);
+      init_price = price_list[price_list.length-1];
+      console.log("interval: " + interval[i-1] + "-" + interval[i] + "mean: " + mean[i-1]);
     }      
     
     console.log("# of prices: " + price_list.length);
@@ -492,73 +502,101 @@ $(function(){
     },
     latestLabel = startingData.labels[0];
 
-// Reduce the animation steps for demo clarity.
-var myLiveChart = new Chart(ctx, 
+  // Reduce the animation steps for demo clarity.
+  var myLiveChart = new Chart(ctx, 
+  {
+    options: {
+      responsive: true,
+      scaleBeginAtZero : true,
+      title: {
+        display: true,
+        text: 'SPX-TURBO-5000'
+      },
+      scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero:true
+              }
+          }]
+      }
+    }
+    }).Line(startingData,         
       {
-        options: {
-          responsive: true,
-          scaleBeginAtZero : true,
-          title: {
-            display: true,
-            text: 'SPX-TURBO-5000'
-          },
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero:true
-                  }
-              }]
-          }
-        }
-      }).Line(startingData);
+        scaleOverride : true,
+        scaleSteps : 8,
+        scaleStepWidth : 25,
+        scaleStartValue : 900 
+      });
+    
+  /*  
+  var pnlcanvas= document.getElementById('pnl-chart').getContext('2d'),
+   pnldata = {
+    labels: [0],
+    datasets: [{
+              fillColor: "rgba(151,187,205,0.2)",
+              strokeColor: "rgba(151,187,205,1)",
+              pointColor: "rgba(151,187,205,1)",
+              pointStrokeColor: "#fff",
+              pointBorderWidth: 1,
+              pointHoverRadius: 10,
+              pointHoverBorderWidth: 3,
+              xAxisID: "Time",
+              yAxisID: "Value",
+              data: []
+            }]
+    },
+    latestLabel = pnldata.labels[0];
+    */
+  //var pnlchart = new Chart(pnlcanvas).line(pnldata);
+//});
       
       
 var point_ctr = 1;
+var news_num = 0;
+var cumulativePnl = 0;
 
 setInterval(function(){
+  
+  var x = prices[plot_ctr];
+  //cumulativePnl += cumulativePnL();
+  console.log("Interval " + point_ctr + ": " + x);
+  //just to avoid the zero starting point......
+  plot_ctr++;
+  
+  if (x == null)
+      return;    
 
-    var x = prices[plot_ctr];
-    console.log("Interval " + point_ctr + ": " + x);
-    //just to avoid the zero starting point......
-    plot_ctr++;
-
-    if (x == null)
-        return;    
-
-    if (point_ctr <= simulation_time + 1) {
+  if (point_ctr <= simulation_time + 1) {
+  
+    if (interval.indexOf(point_ctr) != -1 ){
+        document.getElementById("news").innerHTML += ('<tr><td>' + "News " + ++news_num + ":" + '<br>' + texts[next_interval] + '</td></tr>' );
+        next_interval++;
+    }
+    myLiveChart.addData([x],point_ctr);
+    point_ctr++;
+    var prev_price = document.getElementById("marketprice").innerHTML;
     
-        if (interval.indexOf(point_ctr) != -1 ){
-            document.getElementById("news").innerHTML += ('<tr><td>' + texts[next_interval] + '</td></tr>' );
-            next_interval++;
-        }
-        //document.getElementById("news").innerHTML += ('<tr><td>' + plot_ctr + ' ' + point_ctr + '</td></tr>');
-      
+    //green-red color to show change
+    if (prev_price > x)
+        document.getElementById("marketprice").style.color = '#ff0000';
+    else
+        document.getElementById("marketprice").style.color = '#00EE00';
         
-        myLiveChart.addData([x],point_ctr);
-        point_ctr++;
-        var prev_price = document.getElementById("marketprice").innerHTML;
-        
-        //green-red color to show change
-        if (prev_price > x)
-            document.getElementById("marketprice").style.color = '#ff0000';
-        else
-            document.getElementById("marketprice").style.color = '#00EE00';
-            
-        document.getElementById("marketprice").innerHTML =x.toFixed(2);    
-        unrealizedPnL();
-         
+    document.getElementById("marketprice").innerHTML =x.toFixed(2);    
+    unrealizedPnL();
+    //pnlchart.addData([cumulativePnl],point_ctr);
   }
   
   else{
-    
     //at the end, update realized P&L
     endrealizedPnL();
     return;
   }
 
   if (point_ctr >= 20){
-      // Remove the first point so we dont just add values forever
-      myLiveChart.removeData();
+    // Remove the first point so we dont just add values forever
+    myLiveChart.removeData();
   }
+  
 }, 1000);
 });

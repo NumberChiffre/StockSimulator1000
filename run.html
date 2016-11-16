@@ -39,8 +39,11 @@ function sell(){
         else{
             //get the current average cost prior to purchase and the unrealized pnl
             var averagecost = parseFloat(document.getElementById("averagecost").innerHTML);
-      var unrealizedPnL = parseFloat(document.getElementById("unrealized").innerHTML) - (marketprice - averagecost) * size;
-            document.getElementById("realized").innerHTML = (realizedPnL + size * (marketprice-averagecost)).toFixed(2);
+            var unrealizedPnL = parseFloat(document.getElementById("unrealized").innerHTML) - (marketprice - averagecost) * size;
+            
+            //manage short-selling, only calculate realized PnL when we spot the user is not covering, when size of position is less than current holdings
+            if (-1*size < currentposition)
+              document.getElementById("realized").innerHTML = (realizedPnL + size * (marketprice-averagecost)).toFixed(2);
         }
     
         //update current position after the purchase
@@ -130,7 +133,6 @@ function buy(){
              <tbody>
         <!-- <tr><td></td></tr> -->
         </tbody>
-
           </table>
           <!-- <div id="news"></div> -->
       </div>
