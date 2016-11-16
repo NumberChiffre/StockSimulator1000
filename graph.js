@@ -526,18 +526,27 @@ setInterval(function(){
         return;    
 
     if (point_ctr <= simulation_time + 1) {
-
+    
         if (interval.indexOf(point_ctr) != -1 ){
             document.getElementById("news").innerHTML += ('<tr><td>' + texts[next_interval] + '</td></tr>' );
             next_interval++;
         }
         //document.getElementById("news").innerHTML += ('<tr><td>' + plot_ctr + ' ' + point_ctr + '</td></tr>');
       
-    myLiveChart.addData([x],point_ctr);
-    point_ctr++;
-    document.getElementById("marketprice").innerHTML =x.toFixed(2);
-    unrealizedPnL();
-     
+        
+        myLiveChart.addData([x],point_ctr);
+        point_ctr++;
+        var prev_price = document.getElementById("marketprice").innerHTML;
+        
+        //green-red color to show change
+        if (prev_price > x)
+            document.getElementById("marketprice").style.color = '#ff0000';
+        else
+            document.getElementById("marketprice").style.color = '#00EE00';
+            
+        document.getElementById("marketprice").innerHTML =x.toFixed(2);    
+        unrealizedPnL();
+         
   }
   
   else{
