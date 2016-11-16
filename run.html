@@ -3,11 +3,6 @@
 <head>
   <meta charset="utf-8">
   <title>JS Bin</title>
-  <style>
-/*    .goright{
-      float:right;
-    }*/
-  </style>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
@@ -22,7 +17,7 @@
 
 <!-- <script src="bower_components/numjs/dist/numjs.min.js"></script> -->
 <!-- <script src="buttons.js"></script> -->
-<script src="simulator.js"></script>
+<script src="graph.js"></script>
 
 <script>
 function sell(){
@@ -96,8 +91,6 @@ function buy(){
   <h1>SPX-TURBO-500 INDEX Stock Simulation Price Path</h1>
   <div class = "row">
     <div class ="col-lg-4">
-      <p>MARKET PRICE:</p>
-      <p id = "marketprice">1000</p>
       <span style="display: inline; float: left;">
         <button onclick="buy()" class="btn btn-lg btn-success">BUY</button>
         <button onclick="sell()" class="btn btn-lg btn-danger">SELL</button>
@@ -113,12 +106,14 @@ function buy(){
           <tr>
             <td>SPX HOLDINGS</td>
             <td>AVERAGE COST</td>
+            <td>MARKET PRICE</td>
             <td>Unrealized PnL</td>
             <td>Realized PnL</td>
           </tr>
           <tr>
             <td><p id = "position">0</p></td>
             <td><p id = "averagecost">0</p></td>
+            <td><p id = "marketprice">1000</p></td>
             <td><p id = "unrealized">0</p></td>
             <td><p id = "realized">0</p></td>
           </tr>
@@ -128,7 +123,7 @@ function buy(){
   </div>
     <div class="row">
       <div class="col-md-8">
-        <canvas id="updating-chart" width="1000" height="700"></canvas>
+        <canvas id="updating-chart" width="1400" height="700"></canvas>
       </div>
       <div class="col-md-4">
           <table class="table table-striped" id="news">
