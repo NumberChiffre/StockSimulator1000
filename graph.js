@@ -1,3 +1,5 @@
+//Made by Terence and Lenmor, Yhack2016
+
 var simulation_time = 300;
 var init_price = 1000;
 var plot_ctr = 1;
