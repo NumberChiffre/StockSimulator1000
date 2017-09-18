@@ -1,5 +1,6 @@
 // 'use strict'
 // Made by Terence and Lenmor, Yhack 2016
+// Extreme type
 
 //duration of the simulation
 var simulation_time = 300;
