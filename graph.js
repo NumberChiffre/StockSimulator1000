@@ -1,8 +1,4 @@
-//On and Off
-
-
 var simulation_time = 300;
-//starting price
 var init_price = 1000;
 var plot_ctr = 1;
 var last_price = 1000;
@@ -12,7 +8,7 @@ var next_interval = 0;
     var sampleNews = [
       {
         index: 0,
-        question: "I am really done! Activist investor Phil Jackman believes the aging population and increasing healthcare product demand will be a significant catalyst in Valiant's future performance. Valiant's board has discussed the possibility to launch a major series of capital investments to set the platform for this future growth.",
+        question: "Activist investor Phil Jackman believes the aging population and increasing healthcare product demand will be a significant catalyst in Valiant's future performance. Valiant's board has discussed the possibility to launch a major series of capital investments to set the platform for this future growth.",
         class: "Neutral",
         reason: "No materialization of the capital investments yet, not safe to invest right away",
         mu: 0.01,
@@ -201,16 +197,7 @@ var next_interval = 0;
         reason: "",
         mu: 0.021,
         sigma: 0.009
-      },
-      {
-        index: 24,
-        question: "Random news guess the parameters :)",
-        class: "Bullish",
-        reason: "",
-        mu: 0.01,
-        sigma: 0.01
-      }  
-
+      }
     ];
 
 function cumulativePnL(){
