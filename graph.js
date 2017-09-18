@@ -1,6 +1,8 @@
 // 'use strict'
 //hehe
 
+//Alter
+
 //duration of the simulation
 var simulation_time = 300;
 //starting price
